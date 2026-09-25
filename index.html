@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Post-event survey report for the 2026 UCLA AI Symposium: response rates, satisfaction ratings, session feedback, and open-ended comments. Includes accessible data tables for all charts.">
-<title>2026 UCLA AI Symposium — Preliminary Post-Event Survey Report</title>
+<meta name="description" content="Post-event survey report for UCLA Teaching Symposium: Adapting Instruction in the Age of AI (2026): response rates, satisfaction ratings, session feedback, and open-ended comments. Includes accessible data tables for all charts.">
+<title>2026 UCLA Teaching Symposium — Adapting Instruction in the Age of AI · Post-Event Survey Report</title>
 <style>
   :root {
     --ucla-blue: #2774AE;
@@ -152,13 +152,101 @@
     opacity: .95;
   }
   header.hero .meta {
-    margin-top: 22px;
+    margin-top: 18px;
     font-size: .9rem;
     opacity: .9;
     border-top: 3px solid var(--ucla-gold);
     padding-top: 14px;
     display: inline-block;
   }
+  header.hero .hero-event-desc {
+    margin: 16px 0 0;
+    max-width: 52em;
+    font-size: .98rem;
+    line-height: 1.65;
+    opacity: .95;
+  }
+  .hero-event-stats {
+    list-style: none;
+    margin: 22px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 720px;
+  }
+  .hero-event-stats li {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .hero-event-stats .stat-k {
+    display: block;
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    opacity: .85;
+    font-weight: 600;
+  }
+  .hero-event-stats .stat-v {
+    display: block;
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-top: 4px;
+    line-height: 1.15;
+  }
+  .hero-event-stats .stat-h {
+    display: block;
+    font-size: .75rem;
+    opacity: .82;
+    margin-top: 4px;
+    line-height: 1.35;
+  }
+  details.report-section {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin: 28px 0 0;
+    background: #fff;
+  }
+  details.report-section > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 16px 20px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ucla-dark);
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  details.report-section > summary::-webkit-details-marker { display: none; }
+  details.report-section > summary::before {
+    content: '▸';
+    color: var(--ucla-blue);
+    font-weight: 800;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+  details.report-section[open] > summary::before { content: '▾'; }
+  details.report-section[open] > summary {
+    border-bottom: 2px solid var(--line);
+  }
+  details.report-section summary .num {
+    color: var(--ucla-blue);
+    font-weight: 800;
+    margin-right: 10px;
+  }
+  details.report-section summary .muted-inline {
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 1rem;
+  }
+  .report-section-body {
+    padding: 4px 20px 24px;
+  }
+  .report-section-body > h3:first-child { margin-top: 22px; }
   main { padding: 16px 56px 56px; }
   h2 {
     color: var(--ucla-dark);
@@ -401,6 +489,7 @@
   @media (max-width: 680px) {
     header.hero, main { padding-left: 24px; padding-right: 24px; }
     header.hero h1 { font-size: 1.5rem; }
+    .hero-event-stats { grid-template-columns: repeat(2, 1fr); }
     .two-col { columns: 1; }
   }
   footer {
@@ -437,7 +526,7 @@
     footer { padding: 16px 0 0; }
     h2 { break-after: avoid; }
     .chart-box, table, blockquote.q, .miniquote, .stat, .note, .callout,
-    details.appendix, details.qdrop, details.chart-data, details.likert-color-key, .q-item { break-inside: avoid; page-break-inside: avoid; }
+    details.appendix, details.qdrop, details.chart-data, details.likert-color-key, details.report-section, .q-item { break-inside: avoid; page-break-inside: avoid; }
     /* expand all dropdowns so their content prints */
     details > summary { color: var(--ucla-dark); }
     details[open] .chart-wrap { height: 280px; }
@@ -631,18 +720,24 @@
 <button class="print-btn" onclick="printReport()" aria-label="Print or save this report as PDF">⎙ Print / Save as PDF</button>
 <div class="page">
   <header class="hero">
-    <p class="kicker">UCLA Teaching and Learning Center · Preliminary Post-Event Survey Report</p>
-    <h1>2026 UCLA AI Symposium</h1>
-    <p class="sub"><em>Adapting Instruction in the Age of AI</em></p>
+    <p class="kicker">2026 · UCLA Teaching Symposium · Post-Event Survey Report</p>
+    <h1>UCLA Teaching Symposium: Adapting Instruction in the Age of AI</h1>
+    <p class="hero-event-desc">This full-day event will thoughtfully address AI’s evolving role and impact on teaching and learning. Panel discussions and flash talks will bring together experts to explore practical, ethical, and equitable uses in instruction from a variety of perspectives, while a keynote speaker will examine the implications of AI in higher education. The day will close with a technology exposition to demonstrate various tools and opportunities for instructors interested in responsibly integrating AI into courses.</p>
+    <ul class="hero-event-stats" aria-label="Event attendance summary">
+      <li><span class="stat-k">Event date</span><span class="stat-v">June 10, 2026</span></li>
+      <li><span class="stat-k">Registered</span><span class="stat-v">—</span><span class="stat-h">Add registration total when available</span></li>
+      <li><span class="stat-k">Attended (reconciled)</span><span class="stat-v">325</span><span class="stat-h">176 in-person · 149 via Zoom</span></li>
+      <li><span class="stat-k">Attendance yield</span><span class="stat-v">—</span><span class="stat-h">Attended ÷ registered (when registration is known)</span></li>
+    </ul>
     <div class="meta">
-      Responses collected June 9–18, 2026 &nbsp;·&nbsp; 50 respondents &nbsp;·&nbsp; Anonymous survey
+      Survey collected June 9–18, 2026 &nbsp;·&nbsp; 50 respondents &nbsp;·&nbsp; Anonymous
     </div>
   </header>
 
   <main id="main-content">
 
     <h2><span class="num">1</span>Overview</h2>
-    <p class="lead">This report summarizes feedback from the post-event survey for the 2026 UCLA Teaching Symposium (<em>Adapting Instruction in the Age of AI</em>). It covers four areas — the overall experience, the keynote and faculty panel, the concurrent sessions, and the Tech Expo and Social Hour — along with open-ended comments, and is intended to inform future AI-related teaching and learning programming. The headline figures are below.</p>
+    <p class="lead">This report summarizes feedback from the post-event survey for <strong>UCLA Teaching Symposium: Adapting Instruction in the Age of AI</strong> (June 10, 2026). It covers four areas — the overall experience, the keynote and faculty panel, the concurrent sessions, and the Tech Expo and Social Hour — along with open-ended comments, and is intended to inform future AI-related teaching and learning programming. Survey headline figures are below; event attendance appears in the banner.</p>
 
     <ul class="stats" aria-label="Key survey metrics">
       <li class="stat"><dl class="stat-inner"><dt>Total responses</dt><dd class="value">50</dd><dd class="detail">Submissions to the post-event survey, collected June 9–18, 2026.</dd></dl></li>
@@ -658,7 +753,9 @@
       <strong>Interpretation note — participation mode.</strong> The survey did not record whether respondents attended in person or remotely, yet many joined via Zoom. Results should therefore be read with caution, especially for in-person-only components (see <a href="#methodology">Methodology &amp; Limitations</a>).
     </div>
 
-    <h2><span class="num">2</span>Who Responded</h2>
+    <details class="report-section" id="section-who-responded">
+    <summary><span class="num">2</span>Who Responded</summary>
+    <div class="report-section-body">
 
     <h3>Primary role at UCLA <span style="color:var(--muted);font-weight:400">(n = 50)</span></h3>
     <table id="table-role">
@@ -676,17 +773,7 @@
         <tr><td>Postdoctoral Scholar</td><td class="num">1</td><td class="barcell"><span class="bar" style="width:10px" aria-hidden="true"></span><span class="pct">2%</span></td></tr>
       </tbody>
     </table>
-    <div class="chart-box">
-      <figure class="chart-figure" aria-labelledby="chartFacultyMix-title">
-      <p class="chart-title" id="chartFacultyMix-title">Faculty vs. non-faculty (visual summary)</p>
-      <p class="chart-sr-note">Decorative chart. Equivalent data: Primary role table above. Slices with n ≥ 3 show count and percent on chart; hover any slice for role name, count, and percent.</p>
-      <div class="chart-visual">
-      <div class="chart-wrap"><canvas id="chartFacultyMix"></canvas></div>
-      </div>
-      </figure>
-      <p class="tablenote">Smaller groups (not labeled on chart): Admin 2 (4%), Other 2 (4%), Postdoc 1 (2%).</p>
-      <details class="qdrop"><summary>Survey question</summary><div class="qbody"><strong>Q5.</strong> Primary role at UCLA <span class="q-meta">(single-select dropdown: Faculty — Regular Professor series; Faculty — Lecturer, Adjunct, or Clinical series; Faculty — Professor of Teaching series; Postdoctoral Scholar; TA/Graduate Student; Staff; Academic Administrator/Coordinator; Other; UCLA Extension Instructor)</span></div></details>
-    </div>
+    <details class="qdrop"><summary>Survey question</summary><div class="qbody"><strong>Q5.</strong> Primary role at UCLA <span class="q-meta">(single-select dropdown: Faculty — Regular Professor series; Faculty — Lecturer, Adjunct, or Clinical series; Faculty — Professor of Teaching series; Postdoctoral Scholar; TA/Graduate Student; Staff; Academic Administrator/Coordinator; Other; UCLA Extension Instructor)</span></div></details>
     <div class="callout"><p>Faculty constituted the large majority of respondents — <strong>32 of 50 (64%)</strong> across the three faculty series. Staff (7) represented the next largest group, and the three student respondents were all at the doctoral level.</p></div>
 
     <h3>Primary Division or School <span style="color:var(--muted);font-weight:400">(n = 49; 1 blank)</span></h3>
@@ -746,7 +833,11 @@
     <h3>Department / Academic Program <span style="color:var(--muted);font-weight:400">(n = 47; 3 blank)</span></h3>
     <p>Responses originated from approximately <strong>28 distinct departments and academic programs</strong>. The most frequently represented were Nursing (6), Community Health Sciences (3), and Psychology (3), while Computer Science, Statistics, Philosophy, Electrical Engineering, Epidemiology, and Dentistry each contributed two respondents. The remaining departments were represented by a single respondent each (for example, Bioengineering, Linguistics, Architecture and Urban Design, English, Sociology, and Education), underscoring the breadth of disciplinary interest in the symposium.</p>
 
-    <h2><span class="num">3</span>Session Attendance</h2>
+    </div></details>
+
+    <details class="report-section" id="section-session-attendance">
+    <summary><span class="num">3</span>Session Attendance</summary>
+    <div class="report-section-body">
     <p>Respondents were able to attend more than one concurrent session, and the corresponding survey item allowed multiple selections. Of the 50 respondents, 32 indicated the session or sessions they attended.</p>
     <table>
       <caption class="visually-hidden">Concurrent session attendance counts</caption>
@@ -762,7 +853,11 @@
     <details class="qdrop"><summary>Survey question</summary><div class="qbody"><strong>Q23.</strong> Concurrent Sessions — Which Session(s) did you attend? <span class="q-meta">(check all that apply)</span><ul><li>Round 1: Ethics, Integrity, &amp; Equity: What Do We Gain &amp; Lose with GenAI in Higher Ed?</li><li>Round 1: Using AI Tools in the Classroom Flash Talks</li><li>Round 2: Evaluating &amp; Applying AI Tools: How to Navigate a Changing Landscape</li><li>Round 2: Building an AI Ethics Writing Curriculum Across Engineering and the Humanities Flash Talks</li><li>Choose Your Own A(I)dventure Roundtables (Rounds 1 or 2)</li></ul></div></details>
     <p>A notable share of respondents attended <strong>remotely via Zoom</strong>, as confirmed by the open-ended comments. These attendees were necessarily unable to participate in the in-person Tech Expo and Social Hour; we assume most did not answer the corresponding survey items (see the interpretation note in Section 1).</p>
 
-    <h2 id="satisfaction-ratings"><span class="num">4</span>Satisfaction Ratings</h2>
+    </div></details>
+
+    <details class="report-section" id="satisfaction-ratings">
+    <summary><span class="num">4</span>Satisfaction Ratings</summary>
+    <div class="report-section-body">
     <p class="lead">All items use a 5-point agreement scale: 1 = Strongly Disagree, 2 = Disagree, 3 = Neutral, 4 = Agree, 5 = Strongly Agree. Full question wording is in <a href="#appendix2">Appendix 2 — Survey Instrument</a>. <strong>Click any chart</strong> to open a larger view, or use the data table below each chart for exact values.</p>
 
     <details class="likert-color-key" id="likert-color-key" aria-label="Agreement scale color key for distribution charts">
@@ -973,7 +1068,11 @@
     </div>
     <p>Ratings for the Tech Expo and Social Hour should be interpreted primarily in light of participation mode: many respondents attended remotely and could not take part in this in-person activity (see Section 1), and we assume they did not answer this question rather than rating it. Among those who did respond, feedback was positive. Several respondents also offered constructive logistical suggestions, which are summarized in the open-ended feedback below.</p>
 
-    <h2><span class="num">5</span>Open-Ended Feedback <span style="color:var(--muted);font-weight:400;font-size:1rem">(30 comments)</span></h2>
+    </div></details>
+
+    <details class="report-section" id="section-open-ended">
+    <summary><span class="num">5</span>Open-Ended Feedback <span class="muted-inline">(30 comments)</span></summary>
+    <div class="report-section-body">
 
     <p>Thirty respondents provided written comments. The principal themes are summarized below, followed by the complete set of verbatim responses.</p>
 
@@ -1030,7 +1129,11 @@
 
     <p class="tablenote">The complete set of 30 verbatim comments is provided in <a href="#appendix1">Appendix 1</a> at the end of this report.</p>
 
-    <h2><span class="num">6</span>Key Takeaways</h2>
+    </div></details>
+
+    <details class="report-section" id="section-takeaways">
+    <summary><span class="num">6</span>Key Takeaways</summary>
+    <div class="report-section-body">
     <ol>
       <li><strong>The symposium was very well received overall.</strong> Ratings for relevance (mean 4.64) and applicability (mean 4.28) were particularly strong, with 98% of respondents agreeing that the content was relevant to their professional work.</li>
       <li><strong>The respondent pool was predominantly faculty (64%) and broadly cross-campus,</strong> spanning 14 divisions and approximately 28 departments — evidence of wide institutional interest.</li>
@@ -1039,12 +1142,20 @@
       <li><strong>There is demonstrated demand for follow-up programming,</strong> including hands-on workshops, shared resources, a wider range of perspectives, and greater inclusion of the student voice.</li>
     </ol>
 
-    <h2 id="methodology"><span class="num">7</span>Methodology and Limitations</h2>
-    <p>The analysis is based on 50 survey responses, of which 49 were complete. Ratings for the keynote and panel, the concurrent sessions, and the Tech Expo and Social Hour reflect smaller sub-samples (n = 2–24), as not all respondents attended every component. Means derived from fewer than 10 respondents — flagged in the corresponding charts and tables — should be interpreted with particular caution.</p>
+    </div></details>
+
+    <details class="report-section" id="methodology">
+    <summary><span class="num">7</span>Methodology and Limitations</summary>
+    <div class="report-section-body">
+    <p>The symposium was held on <strong>June 10, 2026</strong>. The analysis is based on <strong>50</strong> post-event survey responses (49 complete), collected June 9–18, 2026. Internal TLC test and pre-launch submissions were removed from the export before analysis; counts in this report reflect participant responses only. Ratings for the keynote and panel, the concurrent sessions, and the Tech Expo and Social Hour reflect smaller sub-samples (n = 2–24), as not all respondents attended every component. Means derived from fewer than 10 respondents — flagged in the corresponding charts and tables — should be interpreted with particular caution.</p>
     <p><strong>Response rate.</strong> The reconciled attendee count was 325 (176 in-person and 149 via Zoom). Excluding TLC staff — 30 in-person and 3 on Zoom (33 total) — leaves 292 eligible attendees, yielding a response rate of approximately <strong>17%</strong> (50 ÷ 292). Presenters and expo partners (44 in-person) are retained in this figure; if they were also excluded, the eligible base would be smaller and the rate correspondingly higher. Including TLC staff, the rate would be approximately 15% (50 ÷ 325).</p>
     <p>The most significant limitation concerns <strong>participation mode</strong>. The survey did not ask whether respondents attended in person or remotely, and remote participation was not anticipated during the survey's design. Because remote and partial-day attendees experience the symposium differently from full-day, in-person attendees — and cannot participate in certain components at all — the combined results may present a skewed or biased picture of the overall experience. Future iterations of the survey should include an explicit question on participation mode, and ideally on the portion of the event attended, to enable accurate segmentation and comparison of results.</p>
 
-    <h2 id="appendix1"><span class="num">A1</span>Appendix 1 — Verbatim Comments</h2>
+    </div></details>
+
+    <details class="report-section" id="appendix1">
+    <summary><span class="num">A1</span>Appendix 1 — Verbatim Comments</summary>
+    <div class="report-section-body">
     <details class="appendix">
       <summary>Show all 30 verbatim comments (reproduced exactly as submitted)</summary>
       <div class="quotes">
@@ -1093,11 +1204,15 @@ It also would have been interesting to have one or two undergraduate students of
       </div>
     </details>
 
-    <h2 id="appendix2"><span class="num">A2</span>Appendix 2 — Survey Instrument</h2>
+    </div></details>
+
+    <details class="report-section" id="appendix2">
+    <summary><span class="num">A2</span>Appendix 2 — Survey Instrument</summary>
+    <div class="report-section-body">
     <details class="appendix">
       <summary>Show the full survey questions</summary>
       <div>
-        <p class="q-meta">Source: 2026 AI Symposium — Post-Event Survey. Items shown in the order presented; matrix items used a 5-point Agreement scale (1 = Strongly Disagree, 2 = Disagree, 3 = Neutral, 4 = Agree, 5 = Strongly Agree). "Display" notes indicate conditional (skip-logic) questions.</p>
+        <p class="q-meta">Source: UCLA Teaching Symposium: Adapting Instruction in the Age of AI — Post-Event Survey (2026). Items shown in the order presented; matrix items used a 5-point Agreement scale (1 = Strongly Disagree, 2 = Disagree, 3 = Neutral, 4 = Agree, 5 = Strongly Agree). "Display" notes indicate conditional (skip-logic) questions.</p>
 
         <p class="q-item" style="font-style:italic;color:var(--muted)">Introduction: "Thank you for participating in the UCLA Teaching Symposium: Adapting Instruction in the Age of AI! Your feedback will help the TLC understand your experience and provide valuable input to the future development of AI-related events and resources for teaching and learning."</p>
 
@@ -1134,10 +1249,12 @@ It also would have been interesting to have one or two undergraduate students of
       </div>
     </details>
 
+    </div></details>
+
   </main>
 
   <footer>
-    <p>Prepared from <code>2026_dataset.csv</code> (responses) and <code>2026_questions.docx</code> (survey instrument). UCLA Teaching and Learning Center — 2026 AI Symposium Post-Event Survey.</p>
+    <p>Prepared from <code>2026_dataset.csv</code> (responses) and <code>2026_questions.docx</code> (survey instrument). UCLA Teaching and Learning Center — UCLA Teaching Symposium: Adapting Instruction in the Age of AI (2026) Post-Event Survey.</p>
     <p><strong>Accessibility:</strong> Charts are decorative summaries; equivalent data appear in the rating tables and in expandable <strong>View data table</strong> sections below each chart. The report uses semantic headings, table captions, skip links, keyboard-operable disclosures, visible focus indicators, and respects reduced-motion preferences. If you encounter any barrier accessing this content, please contact the UCLA Teaching and Learning Center for an alternative format.</p>
   </footer>
 </div>
@@ -1164,6 +1281,10 @@ It also would have been interesting to have one or two undergraduate students of
   const POPUP_SCALE = 1.5;
   const POPUP_DIV_CANVAS_SCALE = 2;
   const POPUP_FONT_SCALE = 1.5;
+  const POPUP_DPR_MULTIPLIER = 2;
+  function popupDevicePixelRatio(){
+    return Math.min(3, Math.max(2, (window.devicePixelRatio || 1) * POPUP_DPR_MULTIPLIER));
+  }
   const CAT_TICK = { maxRotation: 0, minRotation: 0, autoSkip: false, font: { size: 15 } };
   const LEGEND_BOTTOM = {
     position: 'bottom',
@@ -1250,10 +1371,6 @@ It also would have been interesting to have one or two undergraduate students of
       return lab + ': ' + v + ' (' + Math.round(v / total * 100) + '%)';
     };
   }
-  function facultySliceTextColor(i){
-    const bg = FACULTY_TERTIARY[i];
-    return tertiaryTextColor(bg);
-  }
   const noLegend = { plugins:{ legend:{ display:false }, datalabels:{ display:false } } };
   // UCLA tertiary palette (graphics only)
   const TERTIARY = ['#FF00A5','#8237FF','#00FFFF','#00FF87','#FFFF00','#000000'];
@@ -1323,42 +1440,7 @@ It also would have been interesting to have one or two undergraduate students of
     };
   }
 
-  // 2. Faculty mix (doughnut) — tertiary palette; on-slice labels when n >= 3
-  const FACULTY_TERTIARY = ['#8237FF','#00FFFF','#00FF87','#FFFF00','#FF00A5','#000000','#6B7280'];
-  const facultyMixLabels = ['Faculty', 'Staff', 'Students', 'Extension Instr.', 'Admin', 'Other', 'Postdoc'];
-  const facultyMixData = [32, 7, 3, 3, 2, 2, 1];
-  const facultyMixTotal = 50;
-  new Chart(document.getElementById('chartFacultyMix'), {
-    type:'doughnut',
-    data:{ labels:facultyMixLabels,
-      datasets:[{ data:facultyMixData, backgroundColor:FACULTY_TERTIARY, borderColor:'#fff', borderWidth:2,
-        datalabels:{
-          display:(ctx)=> facultyMixData[ctx.dataIndex] >= 3,
-          color:(ctx)=> facultySliceTextColor(ctx.dataIndex),
-          font:(ctx)=>({ weight:'700', size: facultyMixData[ctx.dataIndex] >= 7 ? 13 : 12 }),
-          textAlign:'center',
-          formatter:(value)=> value + ' (' + Math.round(value / facultyMixTotal * 100) + '%)'
-        } }] },
-    options:{ maintainAspectRatio:false,
-      interaction:{ mode:'point', intersect:true },
-      elements:{ arc:{ hoverOffset:6 } },
-      plugins:{
-        legend: Object.assign({}, LEGEND_RIGHT),
-        datalabels:{ display:true, listeners:false },
-        tooltip:{
-          enabled:true,
-          callbacks:{
-            title:(items)=> facultyMixLabels[items[0].dataIndex],
-            label:(c)=>{
-              const n = typeof c.parsed === 'number' ? c.parsed : c.raw;
-              return n + ' (' + Math.round(n / facultyMixTotal * 100) + '%)';
-            }
-          }
-        }
-      } }
-  });
-
-  // 3. Division / School — 100% stacked bar; UCLA tertiary palette (n = 49)
+  // 2. Division / School — 100% stacked bar; UCLA tertiary palette (n = 49)
   const divTotal = 49;
   const divGroups = [
     { label: 'L&S (all)', n: 16, color: '#8237FF' },
@@ -1796,6 +1878,10 @@ It also would have been interesting to have one or two undergraduate students of
           pl.position = 'bottom';
         }
       }
+      if (chart._popupOrig.devicePixelRatio === undefined){
+        chart._popupOrig.devicePixelRatio = o.devicePixelRatio;
+      }
+      o.devicePixelRatio = popupDevicePixelRatio();
     } else {
       if (chart._popupOrig.maintainAspectRatio !== undefined){
         o.maintainAspectRatio = chart._popupOrig.maintainAspectRatio;
@@ -1803,6 +1889,11 @@ It also would have been interesting to have one or two undergraduate students of
       if (pl && chart._popupOrig.legendPosition !== undefined){
         pl.position = chart._popupOrig.legendPosition;
         pl.align = chart._popupOrig.legendAlign || 'center';
+      }
+      if (chart._popupOrig.devicePixelRatio !== undefined){
+        o.devicePixelRatio = chart._popupOrig.devicePixelRatio;
+      } else {
+        delete o.devicePixelRatio;
       }
     }
   }
