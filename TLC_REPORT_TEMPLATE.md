@@ -17,7 +17,7 @@ Use this checklist when building post-event survey reports (or similar artifacts
 3. **Event description** — `.hero-event-desc`; program leads enter text or pull from the event website. Use **past tense** for post-event reports.
 4. **Event attendance block** — `.hero-event-stats` grid:
    - Event date
-   - Registered (fill when known; use em dash + helper text until then)
+   - RSVPs / registered (fill when known; use em dash + helper text until then)
    - Attended (reconciled), with in-person / remote breakdown if applicable
    - Attendance yield (attended ÷ registered when registration is known)
 5. **Survey meta line** — collection dates, n, anonymity.
