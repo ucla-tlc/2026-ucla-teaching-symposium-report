@@ -515,22 +515,71 @@
   }
   .print-btn:hover { background: var(--ucla-dark); }
   @media print {
-    @page { margin: 14mm; }
+    @page { margin: 12mm; size: letter; }
     body { background: #fff; }
-    .page { box-shadow: none; max-width: none; margin: 0; }
-    .print-btn { display: none !important; }
+    .page { box-shadow: none; max-width: none; margin: 0; width: 100%; overflow: visible; }
+    .skip-link, .print-btn { display: none !important; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     a { color: inherit; text-decoration: none; }
-    header.hero { padding: 24px 0; }
+    header.hero { padding: 20px 0; break-inside: avoid; page-break-inside: avoid; }
     main { padding: 8px 0 0; }
-    footer { padding: 16px 0 0; }
-    h2 { break-after: avoid; }
-    .chart-box, table, blockquote.q, .miniquote, .stat, .note, .callout,
-    details.appendix, details.qdrop, details.chart-data, details.likert-color-key, details.report-section, .q-item { break-inside: avoid; page-break-inside: avoid; }
-    /* expand all dropdowns so their content prints */
+    footer { padding: 16px 0 0; break-inside: avoid; page-break-inside: avoid; }
+    h2, h3 { break-after: avoid; page-break-after: avoid; }
+    .two-col { columns: 1 !important; column-gap: 0; }
+    .chart-grid { grid-template-columns: 1fr !important; gap: 12px; }
+    .stats { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .hero-event-stats { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    /* Sections may span pages; keep smaller blocks intact */
+    details.report-section {
+      border: none;
+      border-radius: 0;
+      margin-top: 16px;
+      break-inside: auto;
+      page-break-inside: auto;
+    }
+    details.report-section > summary {
+      break-after: avoid;
+      page-break-after: avoid;
+      padding: 12px 0 8px;
+      border-bottom: 2px solid var(--line);
+    }
+    details.report-section > summary::before { display: none; }
+    .report-section-body { padding: 0; }
+    .chart-box, blockquote.q, .miniquote, .stat, .note, .callout,
+    details.likert-color-key, .chart-figure {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    table { break-inside: auto; page-break-inside: auto; }
+    thead { display: table-header-group; }
+    tr { break-inside: avoid; page-break-inside: avoid; }
+    details.appendix, details.qdrop, details.chart-data, .q-item {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
     details > summary { color: var(--ucla-dark); }
-    details[open] .chart-wrap { height: 280px; }
-    .chart-dialog, .chart-visual-hint { display: none !important; }
+    .chart-wrap {
+      position: relative !important;
+      height: 220px !important;
+      max-height: 220px !important;
+      overflow: hidden;
+    }
+    .chart-wrap.tall { height: 240px !important; max-height: 240px !important; }
+    .chart-wrap.combo { height: 250px !important; max-height: 250px !important; }
+    .chart-wrap.combo.tall { height: 270px !important; max-height: 270px !important; }
+    .chart-wrap.expo { height: 220px !important; max-height: 220px !important; }
+    .chart-wrap.expo-dist { height: 240px !important; max-height: 240px !important; }
+    .chart-wrap.div-stack {
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible;
+    }
+    .chart-wrap.div-stack .chart-canvas-holder {
+      height: 180px !important;
+      max-height: 180px !important;
+    }
+    .chart-wrap canvas { max-width: 100% !important; }
+    .chart-html-tooltip, .chart-dialog, .chart-visual-hint { display: none !important; }
   }
   .chart-box {
     border: 1px solid var(--line);
@@ -725,9 +774,9 @@
     <p class="hero-event-desc">This full-day event thoughtfully addressed AI’s evolving role and impact on teaching and learning. Panel discussions and flash talks brought together experts to explore practical, ethical, and equitable uses in instruction from a variety of perspectives, while a keynote speaker examined the implications of AI in higher education. The day closed with a technology exposition that demonstrated various tools and opportunities for instructors interested in responsibly integrating AI into courses.</p>
     <ul class="hero-event-stats" aria-label="Event attendance summary">
       <li><span class="stat-k">Event date</span><span class="stat-v">June 10, 2026</span></li>
-      <li><span class="stat-k">Registered</span><span class="stat-v">—</span><span class="stat-h">Add registration total when available</span></li>
+      <li><span class="stat-k">RSVPs</span><span class="stat-v">557</span></li>
       <li><span class="stat-k">Attended (reconciled)</span><span class="stat-v">325</span><span class="stat-h">176 in-person · 149 via Zoom</span></li>
-      <li><span class="stat-k">Attendance yield</span><span class="stat-v">—</span><span class="stat-h">Attended ÷ registered (when registration is known)</span></li>
+      <li><span class="stat-k">Attendance yield</span><span class="stat-v">~58%</span><span class="stat-h">325 attended ÷ 557 RSVPs</span></li>
     </ul>
     <div class="meta">
       Survey collected June 9–18, 2026 &nbsp;·&nbsp; 50 respondents &nbsp;·&nbsp; Anonymous
@@ -2094,14 +2143,50 @@ It also would have been interesting to have one or two undergraduate students of
       setTimeout(syncPopupChartSize, 250);
     });
   }
+  function resizeAllChartsForLayout(){
+    try {
+      Object.values(Chart.instances).forEach(function(chart){
+        if (!chart || !chart.canvas) return;
+        const wrap = chart.canvas.closest('.chart-wrap');
+        const holder = wrap && wrap.querySelector('.chart-canvas-holder');
+        const box = holder || wrap;
+        if (!box) return;
+        const w = box.clientWidth;
+        const h = box.clientHeight;
+        if (w <= 0 || h <= 0) return;
+        chart.options.maintainAspectRatio = false;
+        chart.resize(w, h);
+        chart.update('none');
+      });
+    } catch (e) {}
+  }
+  function openAllDetailsForPrint(){
+    document.querySelectorAll('details').forEach(function(d){ d.open = true; });
+  }
   function printReport(){
     closeChartPopup();
-    document.querySelectorAll('details').forEach(function(d){ d.open = true; });
-    setTimeout(function(){
-      try { Object.values(Chart.instances).forEach(function(c){ c.resize(); }); } catch(e){}
-      setTimeout(function(){ window.print(); }, 250);
-    }, 250);
+    openAllDetailsForPrint();
+    document.body.classList.add('is-printing');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        resizeAllChartsForLayout();
+        setTimeout(function(){
+          resizeAllChartsForLayout();
+          window.print();
+        }, 350);
+      });
+    });
   }
+  window.addEventListener('beforeprint', function(){
+    closeChartPopup();
+    openAllDetailsForPrint();
+    document.body.classList.add('is-printing');
+    resizeAllChartsForLayout();
+  });
+  window.addEventListener('afterprint', function(){
+    document.body.classList.remove('is-printing');
+    setTimeout(resizeAllChartsForLayout, 50);
+  });
   function initChartClickExpand(){
     document.querySelectorAll('.chart-figure .chart-visual').forEach(function(visual){
       if (visual.dataset.popupInit) return;
