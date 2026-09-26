@@ -545,28 +545,39 @@
     }
     details.report-section > summary::before { display: none; }
     .report-section-body { padding: 0; }
-    .chart-box, blockquote.q, .miniquote, .stat, .note, .callout,
-    details.likert-color-key, .chart-figure {
+    .chart-box { break-inside: auto; page-break-inside: auto; }
+    blockquote.q, .miniquote, .stat, .note, .callout,
+    details.likert-color-key {
       break-inside: avoid;
       page-break-inside: avoid;
+    }
+    .chart-figure { break-inside: auto; page-break-inside: auto; }
+    .chart-visual {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      overflow: hidden;
+      margin-bottom: 12px;
+      clear: both;
     }
     table { break-inside: auto; page-break-inside: auto; }
     thead { display: table-header-group; }
     tr { break-inside: avoid; page-break-inside: avoid; }
-    details.appendix, details.qdrop, details.chart-data, .q-item {
+    details.appendix, .q-item {
       break-inside: avoid;
       page-break-inside: avoid;
     }
+    /* Skip optional screen-only disclosures in PDF (data already in main tables) */
+    details.qdrop, details.chart-data, #concItemDetails { display: none !important; }
     details > summary { color: var(--ucla-dark); }
     .chart-wrap {
       position: relative !important;
       height: 220px !important;
       max-height: 220px !important;
-      overflow: hidden;
+      overflow: hidden !important;
     }
-    .chart-wrap.tall { height: 240px !important; max-height: 240px !important; }
+    .chart-wrap.tall { height: 300px !important; max-height: 300px !important; }
     .chart-wrap.combo { height: 250px !important; max-height: 250px !important; }
-    .chart-wrap.combo.tall { height: 270px !important; max-height: 270px !important; }
+    .chart-wrap.combo.tall { height: 320px !important; max-height: 320px !important; }
     .chart-wrap.expo { height: 220px !important; max-height: 220px !important; }
     .chart-wrap.expo-dist { height: 240px !important; max-height: 240px !important; }
     .chart-wrap.div-stack {
@@ -578,7 +589,13 @@
       height: 180px !important;
       max-height: 180px !important;
     }
-    .chart-wrap canvas { max-width: 100% !important; }
+    .chart-wrap canvas {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+    }
     .chart-html-tooltip, .chart-dialog, .chart-visual-hint { display: none !important; }
   }
   .chart-box {
@@ -2143,6 +2160,40 @@ It also would have been interesting to have one or two undergraduate students of
       setTimeout(syncPopupChartSize, 250);
     });
   }
+  function setChartsPrintMode(on){
+    try {
+      Object.values(Chart.instances).forEach(function(chart){
+        if (!chart || !chart.options) return;
+        const plugins = chart.options.plugins || {};
+        const leg = plugins.legend;
+        if (leg){
+          if (on){
+            if (chart._printLegendSaved === undefined){
+              chart._printLegendSaved = leg.display;
+            }
+            leg.display = false;
+          } else if (chart._printLegendSaved !== undefined){
+            leg.display = chart._printLegendSaved;
+            delete chart._printLegendSaved;
+          }
+        }
+        if (on){
+          if (chart._printPaddingSaved === undefined){
+            chart._printPaddingSaved = chart.options.layout && chart.options.layout.padding;
+          }
+          chart.options.layout = chart.options.layout || {};
+          chart.options.layout.padding = Object.assign(
+            { top: 4, bottom: 4, left: 4, right: 8 },
+            chart._printPaddingSaved || {}
+          );
+        } else if (chart._printPaddingSaved !== undefined){
+          chart.options.layout = chart.options.layout || {};
+          chart.options.layout.padding = chart._printPaddingSaved;
+          delete chart._printPaddingSaved;
+        }
+      });
+    } catch (e) {}
+  }
   function resizeAllChartsForLayout(){
     try {
       Object.values(Chart.instances).forEach(function(chart){
@@ -2161,31 +2212,40 @@ It also would have been interesting to have one or two undergraduate students of
     } catch (e) {}
   }
   function openAllDetailsForPrint(){
-    document.querySelectorAll('details').forEach(function(d){ d.open = true; });
+    document.querySelectorAll('details.report-section').forEach(function(d){ d.open = true; });
+    document.querySelectorAll('details.report-section details.appendix').forEach(function(d){ d.open = true; });
+    var likertKey = document.querySelector('details.likert-color-key');
+    if (likertKey) likertKey.open = true;
   }
-  function printReport(){
+  function prepareDocumentForPrint(){
     closeChartPopup();
     openAllDetailsForPrint();
     document.body.classList.add('is-printing');
+    setChartsPrintMode(true);
+    resizeAllChartsForLayout();
+  }
+  function restoreDocumentAfterPrint(){
+    document.body.classList.remove('is-printing');
+    setChartsPrintMode(false);
+    setTimeout(resizeAllChartsForLayout, 50);
+  }
+  function printReport(){
+    prepareDocumentForPrint();
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){
         resizeAllChartsForLayout();
         setTimeout(function(){
           resizeAllChartsForLayout();
           window.print();
-        }, 350);
+        }, 400);
       });
     });
   }
   window.addEventListener('beforeprint', function(){
-    closeChartPopup();
-    openAllDetailsForPrint();
-    document.body.classList.add('is-printing');
-    resizeAllChartsForLayout();
+    prepareDocumentForPrint();
   });
   window.addEventListener('afterprint', function(){
-    document.body.classList.remove('is-printing');
-    setTimeout(resizeAllChartsForLayout, 50);
+    restoreDocumentAfterPrint();
   });
   function initChartClickExpand(){
     document.querySelectorAll('.chart-figure .chart-visual').forEach(function(visual){
