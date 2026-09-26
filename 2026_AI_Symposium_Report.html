@@ -566,8 +566,14 @@
       break-inside: avoid;
       page-break-inside: avoid;
     }
-    /* Skip optional screen-only disclosures in PDF (data already in main tables) */
-    details.qdrop, details.chart-data, #concItemDetails { display: none !important; }
+    details.qdrop, #concItemDetails { display: none !important; }
+    details.chart-data {
+      display: block !important;
+      border: none;
+      margin-top: 10px;
+    }
+    details.chart-data > summary { display: none !important; }
+    details.chart-data .sr-table-wrap { margin-top: 0; }
     details > summary { color: var(--ucla-dark); }
     .chart-wrap {
       position: relative !important;
@@ -588,16 +594,23 @@
     .chart-wrap.div-stack .chart-canvas-holder {
       height: 180px !important;
       max-height: 180px !important;
+      overflow: hidden !important;
     }
-    .chart-wrap canvas {
+    .chart-wrap canvas,
+    body.is-printing .chart-wrap canvas {
+      display: none !important;
+    }
+    .chart-print-snapshot {
       display: block !important;
       width: 100% !important;
-      height: 100% !important;
-      max-width: 100% !important;
-      max-height: 100% !important;
+      height: auto !important;
+      max-width: 100%;
+      object-fit: contain;
     }
     .chart-html-tooltip, .chart-dialog, .chart-visual-hint { display: none !important; }
   }
+  body.is-printing .chart-wrap canvas { visibility: hidden; height: 0 !important; }
+  body.is-printing .chart-print-snapshot { display: block; }
   .chart-box {
     border: 1px solid var(--line);
     border-radius: 10px;
@@ -2214,8 +2227,62 @@ It also would have been interesting to have one or two undergraduate students of
   function openAllDetailsForPrint(){
     document.querySelectorAll('details.report-section').forEach(function(d){ d.open = true; });
     document.querySelectorAll('details.report-section details.appendix').forEach(function(d){ d.open = true; });
+    document.querySelectorAll('details.chart-data').forEach(function(d){ d.open = true; });
     var likertKey = document.querySelector('details.likert-color-key');
     if (likertKey) likertKey.open = true;
+  }
+  const printSnapshotState = [];
+  function getChartPrintBox(canvas){
+    const wrap = canvas.closest('.chart-wrap');
+    if (!wrap) return null;
+    return wrap.querySelector('.chart-canvas-holder') || wrap;
+  }
+  function freezeChartsForPrint(){
+    unfreezeChartsForPrint();
+    setChartsPrintMode(true);
+    resizeAllChartsForLayout();
+    document.querySelectorAll('.chart-wrap canvas').forEach(function(canvas){
+      const chart = Chart.getChart(canvas);
+      const box = getChartPrintBox(canvas);
+      if (!chart || !box) return;
+      const w = Math.max(1, box.clientWidth);
+      const h = Math.max(1, box.clientHeight);
+      chart.options.maintainAspectRatio = false;
+      if (chart._printDprSaved === undefined){
+        chart._printDprSaved = chart.options.devicePixelRatio;
+      }
+      chart.options.devicePixelRatio = Math.min(2, window.devicePixelRatio || 1.5);
+      chart.resize(w, h);
+      chart.update('none');
+      const img = document.createElement('img');
+      img.className = 'chart-print-snapshot';
+      img.alt = canvas.getAttribute('aria-label') || 'Chart';
+      try {
+        img.src = chart.toBase64Image('image/png', 1);
+      } catch (err) {
+        return;
+      }
+      img.style.width = w + 'px';
+      img.style.maxWidth = '100%';
+      img.style.height = 'auto';
+      box.querySelectorAll('.chart-html-tooltip').forEach(function(el){ el.remove(); });
+      box.insertBefore(img, canvas);
+      printSnapshotState.push({ canvas: canvas, img: img, chart: chart });
+    });
+  }
+  function unfreezeChartsForPrint(){
+    printSnapshotState.forEach(function(entry){
+      if (entry.img && entry.img.parentNode) entry.img.parentNode.removeChild(entry.img);
+      if (entry.chart){
+        if (entry.chart._printDprSaved !== undefined){
+          entry.chart.options.devicePixelRatio = entry.chart._printDprSaved;
+          delete entry.chart._printDprSaved;
+        } else {
+          delete entry.chart.options.devicePixelRatio;
+        }
+      }
+    });
+    printSnapshotState.length = 0;
   }
   function prepareDocumentForPrint(){
     closeChartPopup();
@@ -2223,26 +2290,31 @@ It also would have been interesting to have one or two undergraduate students of
     document.body.classList.add('is-printing');
     setChartsPrintMode(true);
     resizeAllChartsForLayout();
+    freezeChartsForPrint();
   }
   function restoreDocumentAfterPrint(){
+    unfreezeChartsForPrint();
     document.body.classList.remove('is-printing');
     setChartsPrintMode(false);
-    setTimeout(resizeAllChartsForLayout, 50);
+    setTimeout(resizeAllChartsForLayout, 80);
   }
   function printReport(){
     prepareDocumentForPrint();
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){
-        resizeAllChartsForLayout();
+        freezeChartsForPrint();
         setTimeout(function(){
-          resizeAllChartsForLayout();
           window.print();
-        }, 400);
+        }, 200);
       });
     });
   }
   window.addEventListener('beforeprint', function(){
-    prepareDocumentForPrint();
+    if (!document.body.classList.contains('is-printing')){
+      prepareDocumentForPrint();
+    } else {
+      freezeChartsForPrint();
+    }
   });
   window.addEventListener('afterprint', function(){
     restoreDocumentAfterPrint();
