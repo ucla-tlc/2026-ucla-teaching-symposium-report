@@ -1,4 +1,4 @@
-# TLC academic program / event reports — web + PDF template
+# TLC academic program / event reports: web + PDF template
 
 Use this checklist when building post-event survey reports (or similar artifacts) for TLC programs.
 
